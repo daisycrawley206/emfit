@@ -123,60 +123,71 @@ model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi','siginv \gamma',
 model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x'};
 
 i=i+1; 
-model(i).descr = 'RW model with initial bias towards one action, irreducible noise and positive Pavlovian bias parameter';
-model(i).name = 'llbaepqx';			
-model(i).npar = 5;
-model(i).parnames = {'\beta','\alpha','\pi','q0','\gamma'};
-model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi','q0','siginv \gamma'};
-model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)x','@(x)1./(1+exp(-x))'};
-
-i=i+1; 
-model(i).descr = 'RW model with constant bias towards one action, irreducible noise, positive Pavlovian bias parameter and tow different q0 values for win and loss stimuli ';
-model(i).name = 'llbaepxb2q';			
-model(i).npar = 7;
-model(i).parnames = {'\beta','\alpha','\pi','\gamma','b','q0win','q0loss'};
-model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi','siginv \gamma','b','q0_{win}','q0_{loss}'};
-model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x','@(x)x','@(x)x'};
-
-i=i+1; 
-model(i).descr = 'RW model with constant bias towards one action, irreducible noise, separate positive Pavlovian bias parameter for rewards and losses, and two different q0 values for win and loss stimuli ';
-model(i).name = 'llba2epxb2q';			
-model(i).npar = 8;
-model(i).parnames = {'\beta','\alpha','\pi_{rew}','\pi_{loss}','\gamma','b','q0_{win}','q0_{loss}'};
-model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi_{win}','log \pi_{loss}','siginv \gamma','b','q0_{win}','q0_{loss}'};
-model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x','@(x)x','@(x)x'};
-
-i=i+1; 
-model(i).descr = 'RW model with irreducible noise, constant bias, joint reward/loss sensitivity, and separate positively constrained Pavlovian bias parameters for rewards and losses. ';
-model(i).name = 'llba2epxb';			
+model(i).descr = 'RW model ses change with constant bias towards one action, irreducible noise and positive Pavlovian bias parameter';
+model(i).name = 'llbaepxb_therapychange';			
 model(i).npar = 6;
-model(i).parnames = {'\beta','\alpha','\pi_{rew}','\pi_{loss}','\gamma','b'};
-model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi_{rew}','log \pi_{loss}','siginv \gamma','bias'};
-model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x'};
+model(i).parnames = {'\beta','\alpha','\pi','\gamma','b', '\Delta\pi'};
+model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi','siginv \gamma','b', '\Delta\pi'};
+model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x','@(x)x'};
 
-i=i+1; 
-model(i).descr = 'RW model with irreducible noise, constant bias, joint reward/loss sensitivity, and separate positively constrained Pavlovian bias parameters for conflict and non-conflict cues. ';
-model(i).name = 'llba2epcxb';			
-model(i).npar = 6;
-model(i).parnames = {'\beta','\alpha','\pi_{non-confilct}','\pi_{conflict}','\gamma','b'};
-model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi_{non-conflict}','log \pi_{conflict}','siginv \gamma','bias'};
-model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x'};
 
-i=i+1; 
-model(i).descr = 'RW model with irreducible noise, constanb bias, separate reward and loss sensitivities, and positive Pavlovian bias parameter. ';
-model(i).name = 'll2baepxb';			
-model(i).npar = 6;
-model(i).parnames = {'\beta_{rew}','\beta_{loss}','\alpha','\pi','\gamma','b'};
-model(i).parnames_untr = {'log \beta_{rew}','log \beta_{loss}','siginv \alpha','log \pi','siginv \gamma','bias'};
-model(i).partransform = {'@(x)exp(x)','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x'};
 
-i=i+1; 
-model(i).descr = 'RW model with irreducible noise, constant bias, separate reward and loss sensitivities, and separate positively constrained Pavlovian bias parameters for rewards and losses. ';
-model(i).name = 'll2ba2epxb';			
-model(i).npar = 7;
-model(i).parnames = {'\beta_{rew}','\beta_{loss}','\alpha','\pi_{rew}','\pi_{loss}','\gamma','b'};
-model(i).parnames_untr = {'log \beta_{rew}','log \beta_{loss}','siginv \alpha','log \pi_{rew}','log \pi_{loss}','siginv \gamma','bias'};
-model(i).partransform = {'@(x)exp(x)','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x'};
+
+% i=i+1; 
+% model(i).descr = 'RW model with initial bias towards one action, irreducible noise and positive Pavlovian bias parameter';
+% model(i).name = 'llbaepqx';			
+% model(i).npar = 5;
+% model(i).parnames = {'\beta','\alpha','\pi','q0','\gamma'};
+% model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi','q0','siginv \gamma'};
+% model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)x','@(x)1./(1+exp(-x))'};
+% 
+% i=i+1; 
+% model(i).descr = 'RW model with constant bias towards one action, irreducible noise, positive Pavlovian bias parameter and tow different q0 values for win and loss stimuli ';
+% model(i).name = 'llbaepxb2q';			
+% model(i).npar = 7;
+% model(i).parnames = {'\beta','\alpha','\pi','\gamma','b','q0win','q0loss'};
+% model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi','siginv \gamma','b','q0_{win}','q0_{loss}'};
+% model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x','@(x)x','@(x)x'};
+% 
+% i=i+1; 
+% model(i).descr = 'RW model with constant bias towards one action, irreducible noise, separate positive Pavlovian bias parameter for rewards and losses, and two different q0 values for win and loss stimuli ';
+% model(i).name = 'llba2epxb2q';			
+% model(i).npar = 8;
+% model(i).parnames = {'\beta','\alpha','\pi_{rew}','\pi_{loss}','\gamma','b','q0_{win}','q0_{loss}'};
+% model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi_{win}','log \pi_{loss}','siginv \gamma','b','q0_{win}','q0_{loss}'};
+% model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x','@(x)x','@(x)x'};
+% 
+% i=i+1; 
+% model(i).descr = 'RW model with irreducible noise, constant bias, joint reward/loss sensitivity, and separate positively constrained Pavlovian bias parameters for rewards and losses. ';
+% model(i).name = 'llba2epxb';			
+% model(i).npar = 6;
+% model(i).parnames = {'\beta','\alpha','\pi_{rew}','\pi_{loss}','\gamma','b'};
+% model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi_{rew}','log \pi_{loss}','siginv \gamma','bias'};
+% model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x'};
+% 
+% i=i+1; 
+% model(i).descr = 'RW model with irreducible noise, constant bias, joint reward/loss sensitivity, and separate positively constrained Pavlovian bias parameters for conflict and non-conflict cues. ';
+% model(i).name = 'llba2epcxb';			
+% model(i).npar = 6;
+% model(i).parnames = {'\beta','\alpha','\pi_{non-confilct}','\pi_{conflict}','\gamma','b'};
+% model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi_{non-conflict}','log \pi_{conflict}','siginv \gamma','bias'};
+% model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x'};
+% 
+% i=i+1; 
+% model(i).descr = 'RW model with irreducible noise, constanb bias, separate reward and loss sensitivities, and positive Pavlovian bias parameter. ';
+% model(i).name = 'll2baepxb';			
+% model(i).npar = 6;
+% model(i).parnames = {'\beta_{rew}','\beta_{loss}','\alpha','\pi','\gamma','b'};
+% model(i).parnames_untr = {'log \beta_{rew}','log \beta_{loss}','siginv \alpha','log \pi','siginv \gamma','bias'};
+% model(i).partransform = {'@(x)exp(x)','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x'};
+% 
+% i=i+1; 
+% model(i).descr = 'RW model with irreducible noise, constant bias, separate reward and loss sensitivities, and separate positively constrained Pavlovian bias parameters for rewards and losses. ';
+% model(i).name = 'll2ba2epxb';			
+% model(i).npar = 7;
+% model(i).parnames = {'\beta_{rew}','\beta_{loss}','\alpha','\pi_{rew}','\pi_{loss}','\gamma','b'};
+% model(i).parnames_untr = {'log \beta_{rew}','log \beta_{loss}','siginv \alpha','log \pi_{rew}','log \pi_{loss}','siginv \gamma','bias'};
+% model(i).partransform = {'@(x)exp(x)','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x'};
 
 nModls = i; 
 fprintf('%i models in model list\n',i);
