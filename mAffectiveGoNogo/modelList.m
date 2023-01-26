@@ -124,7 +124,7 @@ model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)1./
 
 i=i+1; 
 model(i).descr = 'RW model ses change with constant bias towards one action, irreducible noise and positive Pavlovian bias parameter';
-model(i).name = 'llbaepxb_therapychange';			
+model(i).name = 'llbaepxbses';			
 model(i).npar = 6;
 model(i).parnames = {'\beta','\alpha','\pi','\gamma','b', '\Delta\pi'};
 model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi','siginv \gamma','b', '\Delta\pi'};

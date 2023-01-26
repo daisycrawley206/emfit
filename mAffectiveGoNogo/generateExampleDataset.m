@@ -15,6 +15,7 @@ options.generatesurrogatedata=1;
 
 T = 160; 
 for sj=1:Nsj; 
+    
 	Data(sj).ID = sprintf('Subj %i',sj);
     %ses = [1:4]';
     %Data(sj).n = (1:4)';
@@ -30,10 +31,10 @@ for sj=1:Nsj;
 	Data(sj).trueParam = [1.5 -.5 -1 1 1 1]'+randn(6,1);
 
 	% generate choices A, state transitions S and rewards R 
-	[foo,foo,dsurr] = llbaepxb_therapychange(Data(sj).trueParam,Data(sj),0,0,0,options); 
+	[foo,foo,dsurr] = llbaepxbses(Data(sj).trueParam,Data(sj),0,0,0,options); 
 	Data(sj).a = dsurr.a;
 	Data(sj).r = dsurr.r;
-	Data(sj).trueModel='llbaepxb_therapychange';
+	Data(sj).trueModel='llbaepxbses';
 
 end
 
