@@ -13,18 +13,31 @@ fprintf('Generating example dataset for affective Go/Nogo task\n')
 
 options.generatesurrogatedata=1; 
 
-T = 160; 
+T = 640; 
 for sj=1:Nsj; 
     
 	Data(sj).ID = sprintf('Subj %i',sj);
+
+% new atttempt 280123
+    ses1 = ones(1,160);
+    ses2 = ses1*2;
+    ses3 = ses1*3;
+    ses4 = ses1*4;
+
+    Data(sj).w = [ses1,ses2,ses3,ses4]; % session ('which' -- 'w')
+    Data(sj).a = zeros(1,T);
+    Data(sj).r = zeros(1,T);  
+
     %ses = [1:4]';
     %Data(sj).n = (1:4)';
-    Data(sj).a = zeros(4,T);
-    Data(sj).r = zeros(4,T);        
+    %Data(sj).a = zeros(4,T);
+    %Data(sj).r = zeros(4,T);        
     rs = randperm(T);							% randomise stimuli 
 	s = [1:4]'*ones(1,T/4);
-    s2 = s(rs);
-	Data(sj).s = repmat(s2,4,1);	
+    Data(sj).s = s(rs);
+
+    %s2 = s(rs);
+	%Data(sj).s = repmat(s2,4,1);	
 	Data(sj).Nch = T; 							% length 
 
 	% realistic random parameters 

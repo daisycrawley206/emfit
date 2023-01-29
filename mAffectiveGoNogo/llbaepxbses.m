@@ -1,4 +1,4 @@
-function [l,dl,dsurr] = llbaepxb(x,D,mu,nui,doprior,options);
+function [l,dl,dsurr] = llbaepxbses(x,D,mu,nui,doprior,options);
 % 
 % [l,dl,surrugatedata] = llbaepxb(x,D,mu,nui,doprior,options);
 % 
@@ -24,15 +24,16 @@ np = length(x);
 a = D.a; 
 r = D.r; 
 s = D.s;
-% need a variable for session to add to the dataset - discuss structure
-% need a grouping variable
+w = D.w; % session ('which' therefore 'w')
+
+% will also need a grouping variable??
 
 if options.generatesurrogatedata==1
 	a = zeros(size(a));
 	dodiff=0;
 end
 
-V=zeros(1,4); 
+V=zeros(1,4); % this sets up the Q values
 Q=zeros(2,4); 
 
 dQdb = zeros(2,4,2);
@@ -46,24 +47,33 @@ dVde = zeros(4,1);
 % additional code, include defining parameters within the loop and
 % rho - this is separating out the Pavlovian bias as the script is 2ep
 
-for ses = 1:size(a,1) 
+% for ses = 1:size(a,1) % this is setting ses as one row and however 
+    %  many columns is the answer to the number of rows in a, but
+    % with a for loop
 
-    for t=1:size(a,2)
+    for t=1:size(a,2) % this is setting t as one row and however
+        %  many columns is the answer to the number of columns in a, but
+        % with a for loop
+        % can also write 1:length(a)
 
-        if t==1
-            V=zeros(1,4);
-            Q=zeros(2,4);
+        if t>1
+            if w(t)~=w(t-1); % this resets the Q values per session
+                V=zeros(1,4);
+                Q=zeros(2,4);
 
-            dQdb = zeros(2,4,2);
-            dQde = zeros(2,4);
-            dVdb = zeros(4,4);
-            dVde = zeros(4,1);
-
+                dQdb = zeros(2,4,2);
+                dQde = zeros(2,4);
+                dVdb = zeros(4,4);
+                dVde = zeros(4,1);
+            end
         end
 
-        if ~isnan(s(ses,t)) & ~isnan(a(ses,t)) % ses is number of sessions
+        if ~isnan(s(t)) & ~isnan(a(t)) % if the index of t within s is not
+            % the same as the index of t within a then do the below
+            ses = w(t);
 
-            sesdep = (ses-1)*x(6); 
+            sesdep = (ses-1)*x(6); %% question: do we use ses-1 because 
+            % that would give zeros for the first session (session 1 - 1)
 
             beta 		= exp(x(1));				% sensitivity to reward
             alfa 		= 1./(1+exp(-x(2)));		% learning rate
@@ -71,8 +81,8 @@ for ses = 1:size(a,1)
             g       	= 1/(1+exp(-x(4)));		    % irreducible noise
             bias 		= x(5);						% constant bias
 
-        	q = Q(:,s(ses,t));
-        	q(1) = q(1) + epsilon * V(s(ses,t)) + bias;    % add Pavlovian effect
+        	q = Q(:,s(t));
+        	q(1) = q(1) + epsilon * V(s(t)) + bias;    % add Pavlovian effect
 
         	l0 = q - max(q);
         	la = l0 - log(sum(exp(l0)));
@@ -80,38 +90,38 @@ for ses = 1:size(a,1)
         	pg = g*p0 + (1-g)/2;
 
         	if options.generatesurrogatedata==1
-        		[a(ses,t),r(ses,t)] = generatera(pg',s(ses,t));
+        		[a(t),r(t)] = generatera(pg',s(t));
             end
-        	l = l + log(pg(a(ses,t)));
+        	l = l + log(pg(a(t)));
 
-        	er = beta * r(ses,t);
+        	er = beta * r(t);
 
         	if dodiff
-        		tmp = (dQdb(:,s(ses,t)) + [epsilon*dVdb(s(ses,t));0]);
-        		dl(1) = dl(1) + g*(p0(a(ses,t)) * (tmp(a(ses,t)) - p0'*tmp)) / pg(a(ses,t));
-        		dQdb(a(ses,t),s(ses,t)) = (1-alfa)*dQdb(a(ses,t),s(ses,t)) + alfa*er;
-        		dVdb(     s(ses,t)) = (1-alfa)*dVdb(     s(ses,t)) + alfa*er;
+        		tmp = (dQdb(:,s(t)) + [epsilon*dVdb(s(t));0]);
+        		dl(1) = dl(1) + g*(p0(a(t)) * (tmp(a(t)) - p0'*tmp)) / pg(a(t));
+        		dQdb(a(t),s(t)) = (1-alfa)*dQdb(a(t),s(t)) + alfa*er;
+        		dVdb(     s(t)) = (1-alfa)*dVdb(     s(t)) + alfa*er;
 
-        		tmp = (dQde(:,s(ses,t)) + [epsilon*dVde(s(ses,t));0]);
-        		dl(2) = dl(2) + g*(p0(a(ses,t)) * (tmp(a(ses,t)) - p0'*tmp)) / pg(a(ses,t));
-        		dQde(a(ses,t),s(ses,t)) = (1-alfa)*dQde(a(ses,t),s(ses,t)) + (er-Q(a(ses,t),s(ses,t)))*alfa*(1-alfa);
-        		dVde(     s(ses,t)) = (1-alfa)*dVde(     s(ses,t)) + (er-V(     s(ses,t)))*alfa*(1-alfa);
+        		tmp = (dQde(:,s(t)) + [epsilon*dVde(s(t));0]);
+        		dl(2) = dl(2) + g*(p0(a(t)) * (tmp(a(t)) - p0'*tmp)) / pg(a(t));
+        		dQde(a(t),s(t)) = (1-alfa)*dQde(a(t),s(t)) + (er-Q(a(t),s(t)))*alfa*(1-alfa);
+        		dVde(     s(t)) = (1-alfa)*dVde(     s(t)) + (er-V(     s(t)))*alfa*(1-alfa);
 
-        		dl(3) = dl(3) + g*(p0(a(ses,t))*epsilon*V(s(ses,t)) * ((a(ses,t)==1)-p0(1))) / pg(a(ses,t));
+        		dl(3) = dl(3) + g*(p0(a(t))*epsilon*V(s(t)) * ((a(t)==1)-p0(1))) / pg(a(t));
 
-        		dl(4) = dl(4) + g*(1-g)*(p0(a(ses,t))-1/2)/pg(a(ses,t));
+        		dl(4) = dl(4) + g*(1-g)*(p0(a(t))-1/2)/pg(a(t));
 
         		tmp = [1;0];
-        		dl(5) = dl(5) + g*(p0(a(ses,t)) * (tmp(a(ses,t)) - p0'*tmp)) / pg(a(ses,t));
+        		dl(5) = dl(5) + g*(p0(a(t)) * (tmp(a(t)) - p0'*tmp)) / pg(a(t));
 
-                dl(6) = dl(6) + g*(p0(a(ses,t))*(ses-1)*epsilon*V(s(ses,t)) * ((a(ses,t)==1)-p0(1))) / pg(a(ses,t));
+                dl(6) = dl(6) + g*(p0(a(t))*(ses-1)*epsilon*V(s(t)) * ((a(t)==1)-p0(1))) / pg(a(t));
             end
 
-        	Q(a(ses,t),s(ses,t)) = Q(a(ses,t),s(ses,t)) + alfa * (er - Q(a(ses,t),s(ses,t)));
-        	V(s(ses,t))      = V(s(ses,t))      + alfa * (er - V(s(ses,t)     ));
+        	Q(a(t),s(t)) = Q(a(t),s(t)) + alfa * (er - Q(a(t),s(t)));
+        	V(s(t))      = V(s(t))      + alfa * (er - V(s(t)     ));
         end
-    end
 end
+% end
 
 l  = -l; % make sure this is outside the for loop otherwise it turns the l's negative and finds the worst fit not best
 dl = -dl; % derivates
