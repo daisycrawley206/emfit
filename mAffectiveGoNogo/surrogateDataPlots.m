@@ -15,47 +15,55 @@ nfig=nfig+1; figure(nfig);clf;
 
 cr = [1 1 2 2];
 
-ns = zeros(max([Data.Nch]),4);
-as = zeros(max([Data.Nch]),4);
-bs = zeros(max([Data.Nch]),4);
-nns = zeros(max([Data.Nch]),4,nModls);
-for sj=1:Nsj
-	a = Data(sj).a; 
-	s = Data(sj).s; 
-	for ss=1:4
-		i = s==ss; 
-		as(1:sum(i),ss,sj) = a(i)==1;
-		ns(1:sum(i),ss) = ns(1:sum(i),ss)+1;
+nSes = length(unique([Data.w]));
 
-		pc(ss,sj) = sum(a(i)==cr(ss))/sum(i);
+ns = zeros(max([Data.Nch])/nSes/4,nSes,4);
+as = zeros(max([Data.Nch])/nSes/4,nSes,4,Nsj); % 4-D double
+bs = zeros(max([Data.Nch])/nSes/4,4,nSes);
+nns = zeros(max([Data.Nch])/nSes/4,4,nSes,nModls);
+for sj=1:Nsj
+	for ses=1:nSes
+		a = Data(sj).a(Data(sj).w==ses); 
+		s = Data(sj).s(Data(sj).w==ses); 
+		for ss=1:4
+			i = s==ss; 
+			as(1:sum(i),ses,ss,sj) = a(i)==1;
+			ns(1:sum(i),ses,ss) = ns(1:sum(i),ss,ses)+1;
+
+			pc(ss,ses,sj) = sum(a(i)==cr(ss))/sum(i);
+		end
 	end
 
 	for mdl=1:nModls;
 		a = [SurrogateData(sj).(models(mdl).name).a]; 
 		nsample = numel(SurrogateData(sj).(models(mdl).name)); 
-		%a = reshape(a,size(a,2)/nsample,nsample);
+		a = reshape(a,size(a,2)/nsample,nsample);
 		b = mean(a==1,2);
-		for ss=1:4
-			i = s==ss; 
-			bs(1:sum(i),ss,mdl,sj) = b(i);
-			nns(1:sum(i),ss,mdl) = nns(1:sum(i),ss,mdl)+1;
+		for ses=1:nSes
+			for ss=1:4
+				i = Data(sj).w==ses & Data(sj).s==ss; 
+				bs(1:sum(i),ss,ses,mdl,sj) = b(i);
+				nns(1:sum(i),ss,ses,mdl) = nns(1:sum(i),ss,mdl)+1;
 
-			pcs(ss,sj,mdl) = mean(sum(a(i,:)==cr(ss))/sum(i));
+				pcs(ss,ses,mdl,sj) = mean(sum(a(i,:)==cr(ss))/sum(i));
+			end
 		end
 	end
-
 end
-mas = sum(as,3)./ns;
-mbs = sum(bs,4)./nns;
+mas = sum(as,4)./ns;
+mbs = sum(bs,5)./nns;
 
 Ti = {'Go to win','Nogo to win','Go to avoid','Nogo to avoid'};
 ssi = [1 2 3 4];
 
 subplot(1,5,1)
-	mybar(sum(pc(ssi,:)')/Nsj,.7);
+	mybar(sum(pc(ssi,:,:),3)/Nsj,.7);
+    col= jet(nModls); 
 	hon
-	xx = [1:4]'*ones(1,nModls) + ones(4,1)*linspace(-.3,.3,nModls);
-	plot(xx,sq(sum(pcs(ssi,:,:),2)/Nsj),'.-','markersize',15,'linewidth',1)
+	xx = [1:4]'*ones(1,nSes) + ones(4,1)*linspace(-.3,.3,nSes);
+	for k=1:nModls
+		plot(xx,sq(sum(pcs(ssi,:,k,:),4)/Nsj),'.-','markersize',15,'linewidth',1,'color',col(k,:))
+	end
 	hof
 	xlim([.5 4.5]);
 	ylabel('Probability correct');
@@ -63,9 +71,9 @@ subplot(1,5,1)
 		
 for ss=1:4
 	subplot(1,5,1+ss);
-		plot(mas(:,ss),'k','linewidth',3);
+		plot(reshape(mas(:,:,ss),[],1),'k','linewidth',3); 
 		hon
-		plot(sq(mbs(:,ss,:)),'linewidth',2)
+		plot(sq(reshape(mbs(:,ss,:,:),1),'linewidth',2)); % this doesn't run still 
 		hof
 		ylim([0 1]);
 		title(Ti{ss});
