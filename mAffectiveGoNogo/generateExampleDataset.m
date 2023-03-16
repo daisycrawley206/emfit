@@ -32,9 +32,12 @@ for sj=1:Nsj;
     %Data(sj).n = (1:4)';
     %Data(sj).a = zeros(4,T);
     %Data(sj).r = zeros(4,T);        
-    rs = randperm(T);							% randomise stimuli 
-	s = [1:4]'*ones(1,T/4);
-    Data(sj).s = s(rs);
+    Data(sj).s = []; 
+	 for k=1:4
+		rs = randperm(T/4);							% randomise stimuli 
+		s0 = [1:4]'*ones(1,T/4/4);
+    	Data(sj).s = [Data(sj).s s0(rs)];
+	 end
 
     %s2 = s(rs);
 	%Data(sj).s = repmat(s2,4,1);	

@@ -28,7 +28,7 @@ for sj=1:Nsj
 		for ss=1:4
 			i = s==ss; 
 			as(1:sum(i),ses,ss,sj) = a(i)==1;
-			ns(1:sum(i),ses,ss) = ns(1:sum(i),ss,ses)+1;
+			ns(1:sum(i),ses,ss) = ns(1:sum(i),ses,ss)+1;
 
 			pc(ss,ses,sj) = sum(a(i)==cr(ss))/sum(i);
 		end
@@ -43,7 +43,7 @@ for sj=1:Nsj
 			for ss=1:4
 				i = Data(sj).w==ses & Data(sj).s==ss; 
 				bs(1:sum(i),ss,ses,mdl,sj) = b(i);
-				nns(1:sum(i),ss,ses,mdl) = nns(1:sum(i),ss,mdl)+1;
+				nns(1:sum(i),ss,ses,mdl) = nns(1:sum(i),ss,ses,mdl)+1;
 
 				pcs(ss,ses,mdl,sj) = mean(sum(a(i,:)==cr(ss))/sum(i));
 			end
@@ -53,32 +53,38 @@ end
 mas = sum(as,4)./ns;
 mbs = sum(bs,5)./nns;
 
+
 Ti = {'Go to win','Nogo to win','Go to avoid','Nogo to avoid'};
 ssi = [1 2 3 4];
 
-subplot(1,5,1)
+for k=1:nModls
+subplot(nModls,5,(k-1)*5+1)
 	mybar(sum(pc(ssi,:,:),3)/Nsj,.7);
-    col= jet(nModls); 
+   col= colororder; 
 	hon
 	xx = [1:4]'*ones(1,nSes) + ones(4,1)*linspace(-.3,.3,nSes);
-	for k=1:nModls
+	%for k=1:nModls
 		plot(xx,sq(sum(pcs(ssi,:,k,:),4)/Nsj),'.-','markersize',15,'linewidth',1,'color',col(k,:))
-	end
+	%end
 	hof
 	xlim([.5 4.5]);
 	ylabel('Probability correct');
 	set(gca,'xticklabel',Ti(ssi),'xticklabelrotation',30);
+	title(models(k).name)
+end
 		
-for ss=1:4
-	subplot(1,5,1+ss);
-		plot(reshape(mas(:,:,ss),[],1),'k','linewidth',3); 
-		hon
-		plot(sq(reshape(mbs(:,ss,:,:),1),'linewidth',2)); % this doesn't run still 
-		hof
-		ylim([0 1]);
-		title(Ti{ss});
-		xlabel('Trial');
-		if ssi(ss)==1; ylabel('Probability Go');end
+for ses=1:4
+	for ss=1:4
+		subplot(4,5,(ses-1)*5+1+ss);
+			plot(mas(:,ses,ss),'k','linewidth',3); 
+			hon
+			plot(sq(mbs(:,ss,ses,:)),'linewidth',2); % this doesn't run still 
+			hof
+			ylim([0 1]);
+			title(Ti{ss});
+			xlabel('Trial');
+			if ssi(ss)==1; ylabel({sprintf('Session %i',ses),'Probability Go'});end
+	end
 end
 
 le = {models.name}; 
