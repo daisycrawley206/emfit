@@ -138,6 +138,14 @@ model(i).parnames = {'\beta','\alpha','\pi','\gamma','b'};
 model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi','siginv \gamma','b'};
 model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x'};
 
+i=i+1; % 13
+model(i).descr = 'RW model multi session with separate ses change in both Pavlovian parameters with constant bias towards one action, irreducible noise and positive Pavlovian bias parameter';
+model(i).name = 'llba2epxb2ses';			
+model(i).npar = 8;
+model(i).parnames = {'\beta','\alpha','\pi_{rew}','\pi_{loss}','\gamma','b', '\Delta\pi_{rew}', '\Delta\pi_{loss}'};
+model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi_{rew}','log \pi_{loss}','siginv \gamma','b', '\Delta\pi_{rew}', '\Delta\pi_{loss}'};
+model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x','@(x)x','@(x)x'};
+
 % i=i+1; 
 % model(i).descr = 'RW model with initial bias towards one action, irreducible noise and positive Pavlovian bias parameter';
 % model(i).name = 'llbaepqx';			
