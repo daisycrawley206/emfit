@@ -57,14 +57,16 @@ mbs = sum(bs,5)./nns;
 Ti = {'Go to win','Nogo to win','Go to avoid','Nogo to avoid'};
 ssi = [1 2 3 4];
 
+keyboard
+
 for k=1:nModls
 subplot(nModls,5,(k-1)*5+1)
-	mybar(sum(pc(ssi,:,:),3)/Nsj,.7);
+	mybar(nanmean(pc(ssi,:,:),3),.7);
    col= colororder; 
 	hon
 	xx = [1:4]'*ones(1,nSes) + ones(4,1)*linspace(-.3,.3,nSes);
 	%for k=1:nModls
-		plot(xx,sq(sum(pcs(ssi,:,k,:),4)/Nsj),'.-','markersize',15,'linewidth',1,'color',col(k,:))
+		plot(xx,sq(nanmean(pcs(ssi,:,k,:),4)),'.-','markersize',15,'linewidth',1,'color',col(k,:))
 	%end
 	hof
 	xlim([.5 4.5]);
