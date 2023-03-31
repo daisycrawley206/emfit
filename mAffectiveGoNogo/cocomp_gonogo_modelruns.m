@@ -4,7 +4,7 @@ clear all;
 
 %% example data
 
-% Data=generateExampleDataset(50,'results');
+Data=generateExampleDataset(50,'results');
 
 %% or real data
 
@@ -28,6 +28,7 @@ C = unique(T.subID);
 % end
 
 %% if running newdf with complete 3 session data
+
 for sj = 1:length(C)
     S(sj).ID = C{(sj),1};
 	 ind = strcmp(S(sj).ID,T.subID);
@@ -41,6 +42,16 @@ for sj = 1:length(C)
     %S(sj).s = T.stim(((sj-1)*540+1):(sj)*540)';
     %S(sj).w = T.session(((sj-1)*540+1):(sj)*540)';
     %S(sj).Nch = length(S(sj).a);
+end
+
+%% if running newdf with complete 3 session data
+for sj = 1:length(C)
+    S(sj).ID = C{(sj),1};
+    S(sj).a = T.a(((sj-1)*540+1):(sj)*540)';
+    S(sj).r = T.reinforcement(((sj-1)*540+1):(sj)*540)';
+    S(sj).s = T.stim(((sj-1)*540+1):(sj)*540)';
+    S(sj).w = T.session(((sj-1)*540+1):(sj)*540)';
+    S(sj).Nch = length(S(sj).a);
 end
 
 Data=S;
@@ -79,7 +90,6 @@ for sj=1:Nsj
 end
 mna = nanmean(na./nx,3)
 mnr = nanmean(nr./nx,3)
-
 
 %% models
 
