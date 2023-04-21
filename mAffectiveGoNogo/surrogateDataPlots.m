@@ -75,8 +75,8 @@ subplot(nModls,5,(k-1)*5+1)
 	title(models(k).name)
 end
 		
-for ses=1:4
-	for ss=1:4
+for ses=1:3
+	for ss=1:3
 		subplot(4,5,(ses-1)*5+1+ss);
 			plot(mas(:,ses,ss),'k','linewidth',3); 
 			hon

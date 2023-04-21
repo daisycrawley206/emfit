@@ -70,7 +70,7 @@ dVde = zeros(4,1);
 
         if ~isnan(s(t)) & ~isnan(a(t)) % if the index of t within s is not
 				
-				rho = sum(s(t)==[1 3]);
+			rho = sum(s(t)==[1 3]);
             % the same as the index of t within a then do the below
             ses = w(t);
 
@@ -116,7 +116,7 @@ dVde = zeros(4,1);
         		tmp = [1;0];
         		dl(6) = dl(6) + g*(p0(a(t)) * (tmp(a(t)) - p0'*tmp)) / pg(a(t));
 
-            dl(8-rho) = dl(8-rho) + g*(p0(a(t))*(ses-1)*epsilon(2-rho)*V(s(t)) * ((a(t)==1)-p0(1))) / pg(a(t));
+                dl(8-rho) = dl(8-rho) + g*(p0(a(t))*(ses-1)*epsilon(2-rho)*V(s(t)) * ((a(t)==1)-p0(1))) / pg(a(t));
          end
 
        	Q(a(t),s(t)) = Q(a(t),s(t)) + alfa * (er - Q(a(t),s(t)));
