@@ -10,8 +10,11 @@ Data=generateExampleDataset(50,'results');
 
 clear all;
 
+dataPath = '/Users/daisycrawley/GitHub/iapttasks/analyses/gonogo/'; 
 % T = readtable('gonogo_data_forModel_270323.csv');
 T = readtable('gonogo_data_forModel_200423_1_3.csv')
+
+dataPath = '/Users/daisycrawley/GitHub/emfit/mAffectiveGoNogo'; 
 
 % T = readtable('newdf.csv');
 
