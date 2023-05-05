@@ -57,8 +57,6 @@ mbs = sum(bs,5)./nns;
 Ti = {'Go to win','Nogo to win','Go to avoid','Nogo to avoid'};
 ssi = [1 2 3 4];
 
-keyboard
-
 for k=1:nModls
 subplot(nModls,5,(k-1)*5+1)
 	mybar(nanmean(pc(ssi,:,:),3),.7);
@@ -76,7 +74,7 @@ subplot(nModls,5,(k-1)*5+1)
 end
 		
 for ses=1:3
-	for ss=1:3
+	for ss=1:4
 		subplot(4,5,(ses-1)*5+1+ss);
 			plot(mas(:,ses,ss),'k','linewidth',3); 
 			hon
