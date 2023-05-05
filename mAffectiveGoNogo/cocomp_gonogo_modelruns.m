@@ -25,15 +25,24 @@ C = unique(T.subID);
 %% wrangling data into a struct for the models 
 for sj = 1:length(C)
     S(sj).ID = C{(sj),1};
-	 ind = strcmp(S(sj).ID,T.subID);
+	ind = strcmp(S(sj).ID,T.subID);
     S(sj).a = T.a(ind)';
     S(sj).r = T.reinforcement(ind)';
     S(sj).s = T.stim(ind)';
     S(sj).w = T.session(ind)';
-    S(sj).Nch = sum(ind);
+    S(sj).Nch = sum(~isnan(S(sj).a));
+    S(sj).a(S(sj).w>1)=NaN; %% if we want only session 1 data (or use this will full data set to drop ses 4)
+
 end
 
 Data = S;
+
+%% throw out any subs who pressed the same stimulus the whole time 
+for sj=1:length(C)
+    Data(sj).subsRemoved = sum(Data(sj).a==1,2)==180;
+end
+disp(sprintf('%d subjects who always picked the same stimulus and were removed',sum(subsRemoved)));
+
 
 %% old daisy attempts
 % 
