@@ -57,7 +57,7 @@ dVde = zeros(4,1);
         % can also write 1:length(a)
 
         if t>1
-            if w(t)~=w(t-1); % this resets the Q values per session
+            if (w(t)~=w(t-1)) | mod(t-1,60)==0; % this resets the Q values per session
                 V=zeros(1,4);
                 Q=zeros(2,4);
 
