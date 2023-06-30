@@ -10,11 +10,10 @@ Data=generateExampleDataset(50,'results');
 
 clear all;
 
-dataPath = '/Users/daisycrawley/GitHub/iapttasks/analyses/gonogo/'; 
+cd '/Users/daisycrawley/GitHub/iapttasks/analyses/gonogo/gonogo_analysis/'; 
 % T = readtable('gonogo_data_forModel_270323.csv');
-T = readtable('gonogo_data_forModel_200423_1_3.csv')
-
-dataPath = '/Users/daisycrawley/GitHub/emfit/mAffectiveGoNogo'; 
+% T = readtable('gonogo_data_forModel_200423_1_3.csv')
+T = readtable('gonogo_data_forModel_290623_1_3.csv')
 
 % T = readtable('newdf.csv');
 
@@ -31,18 +30,38 @@ for sj = 1:length(C)
     S(sj).s = T.stim(ind)';
     S(sj).w = T.session(ind)';
     S(sj).Nch = sum(~isnan(S(sj).a));
-    S(sj).a(S(sj).w>1)=NaN; %% if we want only session 1 data (or use this will full data set to drop ses 4)
-
 end
+
+% S(sj).a(S(sj).w>1)=NaN; %% if we want only session 1 data (or use this will full data set to drop ses 4)
 
 Data = S;
 
 %% throw out any subs who pressed the same stimulus the whole time 
-for sj=1:length(C)
-    Data(sj).subsRemoved = sum(Data(sj).a==1,2)==180;
-end
-disp(sprintf('%d subjects who always picked the same stimulus and were removed',sum(subsRemoved)));
 
+% subsRemoved = sum(Data.a==1,2)==180;
+% idx=find(all(~diff(A)))
+% out=A(1,idx)
+
+idx = ismember({Data.ID}, 'uEDmL4Uo8AcpbpBBfpXQkxzBxNT2') ;
+Data(idx) = [] ;
+
+idx = ismember({Data.ID}, 'Rg9EeKHITqP0pMNmuvyDY28FXXk1') ;
+Data(idx) = [] ;
+
+idxx = ismember({Data.ID}, 'gS4tVDEppjaSrqikwKdlU5vSZjj1') ;
+Data(idxx) = [];
+
+ %% save it for regressor matrix
+
+save(['results' filesep 'Data_clean.mat'],'Data');
+
+
+ %% old code
+% for sj=1:length(C)
+%     Data(sj).subsRemoved = find(all(~diff(Data(sj).a(1:180))));
+% end
+% disp(sprintf('%d subjects who always picked the same stimulus and were removed',sum(Data.subsRemoved)));
+% % the subject: 'uEDmL4Uo8AcpbpBBfpXQkxzBxNT2'
 
 %% old daisy attempts
 % 
@@ -105,6 +124,10 @@ end
 mna = nanmean(na./nx,3)
 mnr = nanmean(nr./nx,3)
 
+%% change back to emfit
+
+cd '/Users/daisycrawley/GitHub/emfit/mAffectiveGoNogo'; 
+
 %% models
 
 % only models 11 and 12 are set up to accomodate 4 sessions of data
@@ -113,6 +136,7 @@ modelsToFit = [11:13]; %% ses change and no change models
 models = modelList;
 models = models(modelsToFit);
 
-batchRunEMfit('mAffectiveGoNogo', Data, 'results', 'modelstofit', modelsToFit, 'maxit',40 ,'checkGradients',0) 
+batchRunEMfit('mAffectiveGoNogo', Data, 'results', 'modelstofit', modelsToFit,'checkGradients',0) 
 
-% emit, you can tell it to only run a set number of loops
+% emit / maxit , you can tell it to only run a set number of loops
+% 'maxit',10
