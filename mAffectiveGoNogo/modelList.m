@@ -146,6 +146,31 @@ model(i).parnames = {'\beta','\alpha','\pi_{rew}','\pi_{loss}','\gamma','b', '\D
 model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi_{rew}','log \pi_{loss}','siginv \gamma','b', '\Delta\pi_{rew}', '\Delta\pi_{loss}'};
 model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x','@(x)x','@(x)x'};
 
+i=i+1; % 14
+model(i).descr = 'RW model multi session with bias changing linearly over sessions, irreducible noise and positively constrained Pavlovian bias parameter';
+model(i).name = 'llbaepxlinbses';			
+model(i).npar = 6;
+model(i).parnames = {'\beta','\alpha','\pi','\gamma','b', '\Delta b'};
+model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi','siginv \gamma','b', '\Delta b'};
+model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x','@(x)x'};
+
+i=i+1; % 15
+model(i).descr = 'RW model multi session with bias changing linearly over sessions, irreducible noise and positively constrained Pavlovian bias parameter';
+model(i).name = 'llbaepxlinblinq0ses';			
+model(i).npar = 8;
+model(i).parnames = {'\beta','\alpha','\pi','\gamma','b', '\Delta b','Q_0','\Delta Q_0'};
+model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi','siginv \gamma','b', '\Delta b','Q_0','\Delta Q_0'};
+model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x','@(x)x','@(x)x','@(x)x'};
+
+i=i+1; % 16
+model(i).descr = 'RW model multi session with bias changing linearly over sessions, irreducible noise and positively constrained Pavlovian bias parameter';
+model(i).name = 'llbalinepxblinq0ses';			
+model(i).npar = 7;
+model(i).parnames = {'\beta','\alpha','\pi','\gamma','b', '\Delta \pi','Q_0'};
+model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi','siginv \gamma','b', '\Delta \pi','Q_0'};
+model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x','@(x)x','@(x)x'};
+
+
 % i=i+1; 
 % model(i).descr = 'RW model with initial bias towards one action, irreducible noise and positive Pavlovian bias parameter';
 % model(i).name = 'llbaepqx';			

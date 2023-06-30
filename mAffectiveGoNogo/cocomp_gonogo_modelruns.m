@@ -4,16 +4,17 @@ clear all;
 
 %% example data
 
-Data=generateExampleDataset(50,'results');
+% Data=generateExampleDataset(50,'results');
 
 %% or real data
 
 clear all;
 
-cd '/Users/daisycrawley/GitHub/iapttasks/analyses/gonogo/gonogo_analysis/'; 
+%cd '/Users/daisycrawley/GitHub/iapttasks/analyses/gonogo/gonogo_analysis/'; 
+drd = '/Users/qhuys/projects/Cocomp/iapttasks/analyses/gonogo/gonogo_analysis/'; 
 % T = readtable('gonogo_data_forModel_270323.csv');
 % T = readtable('gonogo_data_forModel_200423_1_3.csv')
-T = readtable('gonogo_data_forModel_290623_1_3.csv')
+T = readtable([drd 'gonogo_data_forModel_290623_1_3.csv']); 
 
 % T = readtable('newdf.csv');
 
@@ -53,7 +54,7 @@ Data(idxx) = [];
 
  %% save it for regressor matrix
 
-save(['results' filesep 'Data_clean.mat'],'Data');
+% save(['results' filesep 'Data_clean.mat'],'Data');
 
 
  %% old code
@@ -126,17 +127,18 @@ mnr = nanmean(nr./nx,3)
 
 %% change back to emfit
 
-cd '/Users/daisycrawley/GitHub/emfit/mAffectiveGoNogo'; 
+% cd '/Users/daisycrawley/GitHub/emfit/mAffectiveGoNogo'; 
 
 %% models
 
 % only models 11 and 12 are set up to accomodate 4 sessions of data
 % (Nch=640)
-modelsToFit = [11:13]; %% ses change and no change models
+modelsToFit = [11:16]; %% ses change and no change models
+%modelsToFit = [15]; %% ses change and no change models
 models = modelList;
 models = models(modelsToFit);
 
-batchRunEMfit('mAffectiveGoNogo', Data, 'results', 'modelstofit', modelsToFit,'checkGradients',0) 
+batchRunEMfit('mAffectiveGoNogo', Data, 'results', 'modelstofit', modelsToFit,'checkGradients',0,'maxit',10) 
 
 % emit / maxit , you can tell it to only run a set number of loops
 % 'maxit',10
