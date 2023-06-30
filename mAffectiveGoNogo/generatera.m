@@ -1,7 +1,7 @@
 function [a,r] = generatera(pa,s);
 
-p = 0.8; 
-c = 0.4;
+p = 0.9; 
+c = 1;
 ago = 1; 
 
 a = sum(rand>cumsum([0 pa]));
