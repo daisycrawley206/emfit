@@ -10,8 +10,8 @@ clear all;
 
 clear all;
 
-%cd '/Users/daisycrawley/GitHub/iapttasks/analyses/gonogo/gonogo_analysis/'; 
-drd = '/Users/qhuys/projects/Cocomp/iapttasks/analyses/gonogo/gonogo_analysis/'; 
+drd = '/Users/daisycrawley/GitHub/iapttasks/analyses/gonogo/gonogo_analysis/'; 
+% drd = '/Users/qhuys/projects/Cocomp/iapttasks/analyses/gonogo/gonogo_analysis/'; 
 % T = readtable('gonogo_data_forModel_270323.csv');
 % T = readtable('gonogo_data_forModel_200423_1_3.csv')
 T = readtable([drd 'gonogo_data_forModel_290623_1_3.csv']); 
@@ -37,7 +37,7 @@ end
 
 Data = S;
 
-%% throw out any subs who pressed the same stimulus the whole time 
+%% throw out any subs who pressed the same stimulus the whole time or performed below chance 
 
 % subsRemoved = sum(Data.a==1,2)==180;
 % idx=find(all(~diff(A)))
@@ -50,6 +50,15 @@ idx = ismember({Data.ID}, 'Rg9EeKHITqP0pMNmuvyDY28FXXk1') ;
 Data(idx) = [] ;
 
 idxx = ismember({Data.ID}, 'gS4tVDEppjaSrqikwKdlU5vSZjj1') ;
+Data(idxx) = [];
+
+idxx = ismember({Data.ID}, '0K1wfNeZSEQZZcNzLeqpdLpNif73') ;
+Data(idxx) = [];
+
+idxx = ismember({Data.ID}, 'Mjkk62C4j4WPlaI2qARQ2d1tUH42') ;
+Data(idxx) = [];
+
+idxx = ismember({Data.ID}, 'zdmF51otguRrUb7LvEiEcvcW6RJ3') ;
 Data(idxx) = [];
 
  %% save it for regressor matrix
@@ -138,7 +147,7 @@ modelsToFit = [11:16]; %% ses change and no change models
 models = modelList;
 models = models(modelsToFit);
 
-batchRunEMfit('mAffectiveGoNogo', Data, 'results', 'modelstofit', modelsToFit,'checkGradients',0,'maxit',10) 
+batchRunEMfit('mAffectiveGoNogo', Data, 'results', 'modelstofit', modelsToFit,'checkGradients',0) 
 
 % emit / maxit , you can tell it to only run a set number of loops
 % 'maxit',10

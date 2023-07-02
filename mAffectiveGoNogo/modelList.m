@@ -131,8 +131,8 @@ model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi','siginv \gamma',
 model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x','@(x)x'};
 
 i=i+1; % 12
-model(i).descr = 'RW model multi session but ses change with constant bias towards one action, irreducible noise and positive Pavlovian bias parameter';
-model(i).name = 'llbaepxb_nochange';			
+model(i).descr = 'RW model multi session but no ses change with constant bias towards one action, irreducible noise and positive Pavlovian bias parameter';
+model(i).name = 'llbaepxbnochange';			
 model(i).npar = 5;
 model(i).parnames = {'\beta','\alpha','\pi','\gamma','b'};
 model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi','siginv \gamma','b'};
