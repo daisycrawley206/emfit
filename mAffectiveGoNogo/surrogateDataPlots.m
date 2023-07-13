@@ -58,7 +58,7 @@ Ti = {'Go to win','Nogo to win','Go to avoid','Nogo to avoid'};
 ssi = [1 2 3 4];
 
 for k=1:nModls
-subplot(4,nModls,k)
+subplot(1+nSes,nModls,k)
 	mybar(nanmean(pc(ssi,:,:),3),.7);
    col= colororder; 
 	hon
@@ -73,9 +73,9 @@ subplot(4,nModls,k)
 	title(models(k).name)
 end
 		
-for ses=1:3
+for ses=1:nSes
 	for ss=1:4
-		subplot(4,4,ses*4+ss);
+		subplot(1+nSes,4,ses*4+ss);
 			plot(mas(:,ses,ss),'k','linewidth',3); 
 			hon
 			plot(sq(mbs(:,ss,ses,:)),'linewidth',2); % this doesn't run still 

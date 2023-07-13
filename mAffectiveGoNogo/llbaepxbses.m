@@ -51,75 +51,77 @@ dVde = zeros(4,1);
     %  many columns is the answer to the number of rows in a, but
     % with a for loop
 
-    for t=1:size(a,2) % this is setting t as one row and however
-        %  many columns is the answer to the number of columns in a, but
-        % with a for loop
-        % can also write 1:length(a)
+for t=1:size(a,2) % this is setting t as one row and however
+	%  many columns is the answer to the number of columns in a, but
+	% with a for loop
+	% can also write 1:length(a)
 
-        if t>1
-            if (w(t)~=w(t-1)) | mod(t-1,60)==0; % this resets the Q values per session
-                V=zeros(1,4);
-                Q=zeros(2,4);
+	if t>1
+		if (w(t)~=w(t-1)) | mod(t-1,60)==0; % this resets the Q values per session
+			V=zeros(1,4);
+			Q=zeros(2,4);
 
-                dQdb = zeros(2,4,2);
-                dQde = zeros(2,4);
-                dVdb = zeros(4,4);
-                dVde = zeros(4,1);
-            end
-        end
+			dQdb = zeros(2,4,2);
+			dQde = zeros(2,4);
+			dVdb = zeros(4,4);
+			dVde = zeros(4,1);
+		end
+	end
 
-        if ~isnan(s(t)) & ~isnan(a(t)) % if the index of t within s is not
-            % the same as the index of t within a then do the below
-            ses = w(t);
+	if ~isnan(s(t)) & ~isnan(a(t)) % if the index of t within s is not
 
-            sesdep = (ses-1)*x(6); %% question: do we use ses-1 because 
-            % that would give zeros for the first session (session 1 - 1)
 
-            beta 		= exp(x(1));				% sensitivity to reward
-            alfa 		= 1./(1+exp(-x(2)));		% learning rate
-            epsilon 	= exp(x(3)+sesdep);			% 'pavlovian' parameter. Weigth of Vcue into Qgo
-            g       	= 1/(1+exp(-x(4)));		    % irreducible noise
-            bias 		= x(5);						% constant bias
+		% the same as the index of t within a then do the below
+		ses = w(t);
 
-        	q = Q(:,s(t));
-        	q(1) = q(1) + epsilon * V(s(t)) + bias;    % add Pavlovian effect
+		sesdep = (ses-1)*x(6); %% question: do we use ses-1 because 
+		% that would give zeros for the first session (session 1 - 1)
 
-        	l0 = q - max(q);
-        	la = l0 - log(sum(exp(l0)));
-        	p0 = exp(la);
-        	pg = g*p0 + (1-g)/2;
+		beta 		= exp(x(1));				% sensitivity to reward
+		alfa 		= 1./(1+exp(-x(2)));		% learning rate
+		epsilon 	= exp(x(3)+sesdep);			% 'pavlovian' parameter. Weigth of Vcue into Qgo
+		g       	= 1/(1+exp(-x(4)));		    % irreducible noise
+		bias 		= x(5);						% constant bias
 
-        	if options.generatesurrogatedata==1
-        		[a(t),r(t)] = generatera(pg',s(t));
-            end
-        	l = l + log(pg(a(t)));
+		q = Q(:,s(t));
+		q(1) = q(1) + epsilon * V(s(t)) + bias;    % add Pavlovian effect
 
-        	er = beta * r(t);
+		l0 = q - max(q);
+		la = l0 - log(sum(exp(l0)));
+		p0 = exp(la);
+		pg = g*p0 + (1-g)/2;
 
-        	if dodiff
-        		tmp = (dQdb(:,s(t)) + [epsilon*dVdb(s(t));0]);
-        		dl(1) = dl(1) + g*(p0(a(t)) * (tmp(a(t)) - p0'*tmp)) / pg(a(t));
-        		dQdb(a(t),s(t)) = (1-alfa)*dQdb(a(t),s(t)) + alfa*er;
-        		dVdb(     s(t)) = (1-alfa)*dVdb(     s(t)) + alfa*er;
+		if options.generatesurrogatedata==1
+			[a(t),r(t)] = generatera(pg',s(t));
+		end
+		l = l + log(pg(a(t)));
 
-        		tmp = (dQde(:,s(t)) + [epsilon*dVde(s(t));0]);
-        		dl(2) = dl(2) + g*(p0(a(t)) * (tmp(a(t)) - p0'*tmp)) / pg(a(t));
-        		dQde(a(t),s(t)) = (1-alfa)*dQde(a(t),s(t)) + (er-Q(a(t),s(t)))*alfa*(1-alfa);
-        		dVde(     s(t)) = (1-alfa)*dVde(     s(t)) + (er-V(     s(t)))*alfa*(1-alfa);
+		er = beta * r(t);
 
-        		dl(3) = dl(3) + g*(p0(a(t))*epsilon*V(s(t)) * ((a(t)==1)-p0(1))) / pg(a(t));
+		if dodiff
+			tmp = (dQdb(:,s(t)) + [epsilon*dVdb(s(t));0]);
+			dl(1) = dl(1) + g*(p0(a(t)) * (tmp(a(t)) - p0'*tmp)) / pg(a(t));
+			dQdb(a(t),s(t)) = (1-alfa)*dQdb(a(t),s(t)) + alfa*er;
+			dVdb(     s(t)) = (1-alfa)*dVdb(     s(t)) + alfa*er;
 
-        		dl(4) = dl(4) + g*(1-g)*(p0(a(t))-1/2)/pg(a(t));
+			tmp = (dQde(:,s(t)) + [epsilon*dVde(s(t));0]);
+			dl(2) = dl(2) + g*(p0(a(t)) * (tmp(a(t)) - p0'*tmp)) / pg(a(t));
+			dQde(a(t),s(t)) = (1-alfa)*dQde(a(t),s(t)) + (er-Q(a(t),s(t)))*alfa*(1-alfa);
+			dVde(     s(t)) = (1-alfa)*dVde(     s(t)) + (er-V(     s(t)))*alfa*(1-alfa);
 
-        		tmp = [1;0];
-        		dl(5) = dl(5) + g*(p0(a(t)) * (tmp(a(t)) - p0'*tmp)) / pg(a(t));
+			dl(3) = dl(3) + g*(p0(a(t))*epsilon*V(s(t)) * ((a(t)==1)-p0(1))) / pg(a(t));
 
-                dl(6) = dl(6) + g*(p0(a(t))*(ses-1)*epsilon*V(s(t)) * ((a(t)==1)-p0(1))) / pg(a(t));
-            end
+			dl(4) = dl(4) + g*(1-g)*(p0(a(t))-1/2)/pg(a(t));
 
-        	Q(a(t),s(t)) = Q(a(t),s(t)) + alfa * (er - Q(a(t),s(t)));
-        	V(s(t))      = V(s(t))      + alfa * (er - V(s(t)     ));
-        end
+			tmp = [1;0];
+			dl(5) = dl(5) + g*(p0(a(t)) * (tmp(a(t)) - p0'*tmp)) / pg(a(t));
+
+			dl(6) = dl(6) + g*(p0(a(t))*(ses-1)*epsilon*V(s(t)) * ((a(t)==1)-p0(1))) / pg(a(t));
+		end
+
+		Q(a(t),s(t)) = Q(a(t),s(t)) + alfa * (er - Q(a(t),s(t)));
+		V(s(t))      = V(s(t))      + alfa * (er - V(s(t)     ));
+	end
 end
 % end
 

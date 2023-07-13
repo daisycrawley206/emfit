@@ -10,8 +10,8 @@ clear all;
 
 clear all;
 
-drd = '/Users/daisycrawley/GitHub/iapttasks/analyses/gonogo/gonogo_analysis/'; 
-% drd = '/Users/qhuys/projects/Cocomp/iapttasks/analyses/gonogo/gonogo_analysis/'; 
+% drd = '/Users/daisycrawley/GitHub/iapttasks/analyses/gonogo/gonogo_analysis/'; 
+drd = '/Users/qhuys/projects/Cocomp/iapttasks/analyses/gonogo/gonogo_analysis/'; 
 % T = readtable('gonogo_data_forModel_270323.csv');
 % T = readtable('gonogo_data_forModel_200423_1_3.csv')
 T = readtable([drd 'gonogo_data_forModel_290623_1_3.csv']); 
@@ -142,12 +142,12 @@ mnr = nanmean(nr./nx,3)
 
 % only models 11 and 12 are set up to accomodate 4 sessions of data
 % (Nch=640)
-modelsToFit = [11:16]; %% ses change and no change models
+modelsToFit = [11]; %% ses change and no change models
 %modelsToFit = [15]; %% ses change and no change models
 models = modelList;
 models = models(modelsToFit);
 
-batchRunEMfit('mAffectiveGoNogo', Data, 'results', 'modelstofit', modelsToFit,'checkGradients',0) 
+batchRunEMfit('mAffectiveGoNogo', Data, 'results', 'modelstofit', modelsToFit,'checkGradients',0,'maxit',5) 
 
 % emit / maxit , you can tell it to only run a set number of loops
 % 'maxit',10
