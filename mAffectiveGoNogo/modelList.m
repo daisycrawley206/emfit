@@ -170,6 +170,13 @@ model(i).parnames = {'\beta','\alpha','\pi','\gamma','b', '\Delta \pi','Q_0'};
 model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi','siginv \gamma','b', '\Delta \pi','Q_0'};
 model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x','@(x)x','@(x)x'};
 
+i=i+1; % 17
+model(i).descr = 'RW model multi session with positively constrained Pavlovain bias changing every session, irreducible noise and bias';
+model(i).name = 'llbaepxb3epses';			
+model(i).npar = 7;
+model(i).parnames = {'\beta','\alpha','\pi','\gamma','b', '\Delta\pi_2','\Delta\pi_3'};
+model(i).parnames_untr = {'log \beta','siginv \alpha','log \pi','siginv \gamma','b', 'log \Delta \pi','log \Delta \pi'};
+model(i).partransform = {'@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)exp(x)','@(x)1./(1+exp(-x))','@(x)x','@(x)x','@(x)x'};
 
 % i=i+1; 
 % model(i).descr = 'RW model with initial bias towards one action, irreducible noise and positive Pavlovian bias parameter';
